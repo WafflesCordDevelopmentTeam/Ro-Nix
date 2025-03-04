@@ -1,0 +1,23 @@
+-- Ro-Noix Loadstring Script by LuxByte
+local loadstringURL = "https://raw.githubusercontent.com/WafflesCordDevelopmentTeam/Ro-Nix/refs/heads/main/Source"
+
+-- Function to fetch and execute the script
+local function loadScript(url)
+    local success, response = pcall(function()
+        return game:HttpGetAsync(url)
+    end)
+
+    if success then
+        local scriptFunction, errorMessage = loadstring(response)
+        if scriptFunction then
+            scriptFunction()
+        else
+            warn("Failed to load script: " .. tostring(errorMessage))
+        end
+    else
+        warn("Failed to fetch script: " .. tostring(response))
+    end
+end
+
+-- Load the script from the URL
+loadScript(loadstringURL)
