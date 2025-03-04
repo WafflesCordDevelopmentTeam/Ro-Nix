@@ -1,0 +1,58 @@
+-- Ro-Noix Script by LuxByte
+local Players = game:GetService("Players")
+local UserInputService = game:GetService("UserInputService")
+local RunService = game:GetService("RunService")
+local LocalPlayer = Players.LocalPlayer
+local Character = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
+local Humanoid = Character:WaitForChild("Humanoid")
+local Animator = Humanoid:WaitForChild("Animator")
+
+-- Configuration
+local PREFIX = "/" -- Prefix for commands
+local DEFAULT_FPS = 30 -- Default animation FPS in Roblox
+
+-- Function to change animation FPS
+local function changeAnimationFPS(fps)
+    if typeof(fps) == "number" and fps > 0 then
+        for _, track in pairs(Animator:GetPlayingAnimationTracks()) do
+            track:AdjustSpeed(fps / DEFAULT_FPS) -- Adjust speed relative to default FPS
+        end
+        LocalPlayer:Chat("Animation FPS set to " .. fps)
+    else
+        LocalPlayer:Chat("Invalid FPS value. Please enter a positive number.")
+    end
+end
+
+-- Chat command handler
+local function onChatMessage(message)
+    -- Check if the message starts with the prefix
+    if message:sub(1, 1) == PREFIX then
+        -- Split the message into command and arguments
+        local args = {}
+        for arg in message:gmatch("%S+") do
+            table.insert(args, arg)
+        end
+
+        -- Extract the command and remove the prefix
+        local command = args[1]:sub(2):lower()
+
+        -- Handle the /fps command
+        if command == "fps" and args[2] then
+            local fps = tonumber(args[2])
+            changeAnimationFPS(fps)
+        else
+            LocalPlayer:Chat("Invalid command. Usage: /fps <number>")
+        end
+    end
+end
+
+-- Announce script execution
+LocalPlayer:Chat("Ro-Noix Made By LuxByte")
+
+-- Connect chat event
+LocalPlayer.Chatted:Connect(onChatMessage)
+
+-- Optional: Add a loop for smooth updates (if needed)
+while true do
+    task.wait(1) -- Adjust as needed for performance
+end
